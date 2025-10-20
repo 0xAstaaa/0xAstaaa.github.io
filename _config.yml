@@ -1,4 +1,4 @@
-title: "CTF Writeups & Portfolio"
+title: "0xAsta"
 description: "Writeups, projects, and a personal portfolio."
 url: "" # e.g., https://bouaafia.github.io
 baseurl: "" # e.g., /site if publishing to a project repo
@@ -21,7 +21,7 @@ nav:
 
 # Portfolio content (homepage)
 portfolio:
-  hero_title: "Bouaafia — Security Researcher & CTF Enthusiast"
+  hero_title: "Mohammed-Amine Bouaafia AKA 0xAsta — Security Researcher & CTF Enthusiast"
   hero_subtitle: "I break things to learn how to build them better. Reverse engineering, web exploitation, crypto, and automation."
   cta_primary_text: "View Projects"
   cta_primary_url: "/projects/"
