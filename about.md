@@ -1,15 +1,16 @@
----
 layout: page
 title: About
 permalink: /about/
 ---
 
-I explore offensive security to build stronger systems. You’ll find my hands-on writeups and a curated list of projects here.
+I dive into code and capture the flag challenges to sharpen real-world skills. Most of my work revolves around web exploitation and boot2root machines — from quick scripts to full writeups.
+
+You’ll also find projects around automation and Discord bots, where I explore how code can simplify everyday workflows.
 
 Highlights:
-- Config-driven categories and clean layouts
-- Client-side search with highlighting and filters
-- Polished tag cloud with improved styling and colors
-- Projects auto-fetched from GitHub, excluding forks and self-named repos
+- Focused CTF writeups with clear breakdowns and payloads  
+- Clean, category-driven layout for easier navigation  
+- Automated project listings fetched directly from GitHub  
+- Social and Discord automation experiments showcased with code snippets
 
-Want to collaborate? Reach out via [GitHub]({{ site.socials.github }}) or open a PR.
+Reach out via [Instagram](https://www.instagram.com/amiinee.bou).
