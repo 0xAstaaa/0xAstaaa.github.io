@@ -8,7 +8,6 @@ project_username: "bouaafia"
 # Default CTF categories; edit to add more
 ctf_categories:
   - TryHackMe
-  - HackTheBox
   - picoCTF
 
 # Navigation (no Submit)
@@ -90,6 +89,6 @@ exclude:
 
 author:
   name: "bouaafia"
-  email: ""
+  email: "bouaafiastudies@gmail.com"
 
 theme: null
