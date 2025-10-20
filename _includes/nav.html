@@ -1,0 +1,17 @@
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="brand" href="{{ '/' | relative_url }}" aria-label="{{ site.title }}">
+      <span class="brand__logo" aria-hidden="true">⚑</span>
+      <span class="brand__text">{{ site.title }}</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <ul class="nav__list">
+        {% for item in site.nav %}
+          <li class="nav__item">
+            <a class="nav__link{% if page.url == item.url %} is-active{% endif %}" href="{{ item.url | relative_url }}">{{ item.name }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </nav>
+  </div>
+</header>

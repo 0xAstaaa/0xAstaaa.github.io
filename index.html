@@ -1,0 +1,105 @@
+---
+layout: home
+title: Home
+---
+
+<section class="hero hero--portfolio">
+  <div class="container hero__inner">
+    <div class="hero__left">
+      <div class="avatar avatar--xl" aria-hidden="true">B</div>
+      <h1 class="hero__title">Hi, I’m {{ site.author.name | default: site.title }} — Security Enthusiast & CTF Writer</h1>
+      <p class="hero__subtitle">
+        I break things to understand them and write clean, reproducible CTF walkthroughs. I love web vulns, crypto, and privilege escalation.
+      </p>
+      <div class="hero__actions">
+        <a class="btn btn--primary" href="{{ '/writeups/' | relative_url }}">Explore Writeups</a>
+        <a class="btn btn--ghost" href="{{ '/projects/' | relative_url }}">View Projects</a>
+      </div>
+      <div class="hero__meta">
+        <span class="stat-badge">Writeups: <strong>{{ site.writeups | size }}</strong></span>
+        <span class="stat-badge">Categories: <strong>{{ site.ctf_categories | size }}</strong></span>
+        <span class="stat-badge">Years: <strong>{{ "now" | date: "%Y" | minus: 1 }}</strong></span>
+      </div>
+    </div>
+    <div class="hero__right">
+      <div class="glass card">
+        <h3>Quick Profile</h3>
+        <ul class="profile-list">
+          <li><span>Focus</span><strong>Web, Crypto, PrivEsc</strong></li>
+          <li><span>Tools</span><strong>Nmap, Burp, Ghidra, pwntools</strong></li>
+          <li><span>Languages</span><strong>Python, Bash, JS</strong></li>
+        </ul>
+      </div>
+      <div class="glass card">
+        <h3>Current Goals</h3>
+        <ul class="checklist">
+          <li>✔ Ship crisp, diagram-rich writeups</li>
+          <li>✔ Automate recon & reporting</li>
+          <li>✔ Tackle advanced crypto challenges</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="container section">
+  <header class="section__header">
+    <h2>Featured Writeups</h2>
+    <p class="muted">Recent posts across TryHackMe, HackTheBox, and picoCTF.</p>
+  </header>
+  <div class="grid grid--3">
+    {% assign items = site.writeups | sort: 'date' | reverse | slice: 0, 6 %}
+    {% for post in items %}
+      <article class="card writeup-card">
+        <header>
+          <h3 class="writeup-card__title"><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
+          <div class="muted">
+            <span>{{ post.date | date: "%Y-%m-%d" }}</span>
+            {% if post.categories and post.categories.size > 0 %}
+              <span>• {{ post.categories | join: ' / ' }}</span>
+            {% endif %}
+          </div>
+        </header>
+        {% if post.excerpt %}
+          <p class="writeup-card__excerpt">{{ post.excerpt | strip_html | truncate: 140 }}</p>
+        {% endif %}
+        {% if post.tags and post.tags.size > 0 %}
+          <div class="tag-list">
+            {% for tag in post.tags %}
+              <span class="tag" data-tag="{{ tag | downcase }}">#{{ tag }}</span>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </article>
+    {% endfor %}
+  </div>
+  <div class="section__actions">
+    <a class="btn btn--ghost" href="{{ '/writeups/' | relative_url }}">View all writeups →</a>
+  </div>
+</section>
+
+<section class="container section">
+  <header class="section__header">
+    <h2>Skills & Tools</h2>
+  </header>
+  <div class="chip-group chip-group--alt">
+    <span class="chip chip--skill">Recon</span>
+    <span class="chip chip--skill">Web Exploitation</span>
+    <span class="chip chip--skill">Crypto</span>
+    <span class="chip chip--skill">Reverse Engineering</span>
+    <span class="chip chip--skill">Privilege Escalation</span>
+    <span class="chip chip--skill">Scripting</span>
+    <span class="chip chip--skill">Reporting</span>
+    <span class="chip chip--skill">Automation</span>
+  </div>
+</section>
+
+<section class="container section">
+  <header class="section__header">
+    <h2>Get in touch</h2>
+  </header>
+  <div class="contact-cta card">
+    <p class="muted">Open to collaboration, feedback, and interesting security challenges.</p>
+    <a class="btn btn--primary" href="{{ '/about/' | relative_url }}">About & Contact</a>
+  </div>
+</section>

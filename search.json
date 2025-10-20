@@ -1,0 +1,33 @@
+---
+layout: null
+permalink: /search.json
+---
+
+[
+  {% assign first = true %}
+  {% for p in site.pages %}
+    {% if p.search_exclude != true and p.layout != nil and p.url != '/search.json' %}
+      {% unless first %},{% endunless %}
+      {
+        "title": {{ p.title | jsonify }},
+        "url": {{ p.url | relative_url | jsonify }},
+        "content": {{ p.content | strip_html | normalize_whitespace | jsonify }},
+        "categories": [],
+        "tags": []
+      }
+      {% assign first = false %}
+    {% endif %}
+  {% endfor %}
+
+  {% for w in site.writeups %}
+    {% unless first %},{% endunless %}
+    {
+      "title": {{ w.title | jsonify }},
+      "url": {{ w.url | relative_url | jsonify }},
+      "content": {{ w.content | strip_html | normalize_whitespace | jsonify }},
+      "categories": {{ w.categories | jsonify }},
+      "tags": {{ w.tags | jsonify }}
+    }
+    {% assign first = false %}
+  {% endfor %}
+]

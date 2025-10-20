@@ -1,0 +1,29 @@
+---
+layout: default
+---
+<article class="container writeup">
+  <header class="writeup__header">
+    <h1>{{ page.title }}</h1>
+    <div class="muted small">
+      {% if page.date %}<span>{{ page.date | date: "%Y-%m-%d" }}</span>{% endif %}
+      {% if page.categories and page.categories.size > 0 %}
+        <span>• {{ page.categories | join: ' / ' }}</span>
+      {% endif %}
+    </div>
+    {% if page.tags and page.tags.size > 0 %}
+      <div class="tag-list">
+        {% for tag in page.tags %}
+          <span class="tag tag--soft">#{{ tag }}</span>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </header>
+
+  <div class="prose">
+    {{ content }}
+  </div>
+
+  <footer class="writeup__footer">
+    <a class="btn btn--ghost" href="{{ '/writeups/' | relative_url }}">← Back to Writeups</a>
+  </footer>
+</article>

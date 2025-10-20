@@ -1,0 +1,23 @@
+---
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    {% include head.html %}
+    <script>
+      window.SITE_BASEURL = "{{ site.baseurl | default: '' }}";
+      window.PROJECT_USERNAME = "{{ site.project_username | default: '' }}";
+      window.CTF_CATEGORIES = {{ site.ctf_categories | jsonify }};
+    </script>
+    <link rel="stylesheet" href="{{ '/assets/css/design.css' | relative_url }}">
+    <script defer src="{{ '/assets/js/main.js' | relative_url }}"></script>
+    {% seo %}
+  </head>
+  <body class="theme-default">
+    {% include nav.html %}
+    <main id="content">
+      {{ content }}
+    </main>
+    {% include footer.html %}
+  </body>
+</html>

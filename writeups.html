@@ -1,0 +1,68 @@
+---
+layout: page
+title: Writeups
+permalink: /writeups/
+---
+
+<section class="filters container">
+  <div class="filters__search">
+    <div class="searchbar" role="search">
+      <span class="searchbar__icon" aria-hidden="true">🔎</span>
+      <input id="search-input" type="search" placeholder="Type to search titles, content, tags…" aria-label="Search writeups" />
+      <button id="search-clear" class="searchbar__clear" type="button" aria-label="Clear search">✕</button>
+      <kbd class="searchbar__hint">/</kbd>
+    </div>
+    <div id="search-stats" class="muted small" aria-live="polite"></div>
+  </div>
+
+  <details class="filters__categories">
+    <summary>Categories</summary>
+    <div class="chip-group" id="category-chips">
+      {% assign cats = site.ctf_categories | default: site.data.ctf_categories %}
+      {% for c in cats %}
+        <button class="chip" data-category="{{ c | escape }}">{{ c }}</button>
+      {% endfor %}
+    </div>
+  </details>
+
+  <details class="filters__tags">
+    <summary>Tag Cloud</summary>
+    <div id="tag-cloud" class="tag-cloud"></div>
+  </details>
+</section>
+
+<section class="container" id="writeup-list">
+  <div class="grid grid--3">
+    {% assign items = site.writeups | sort: 'date' | reverse %}
+    {% for post in items %}
+      {% capture categories %}{{ post.categories | join: ',' }}{% endcapture %}
+      {% capture tags %}{{ post.tags | join: ',' }}{% endcapture %}
+      <article class="card writeup-card"
+               data-title="{{ post.title | escape }}"
+               data-url="{{ post.url | relative_url }}"
+               data-categories="{{ categories | downcase }}"
+               data-tags="{{ tags | downcase }}">
+        <header>
+          <h3 class="writeup-card__title"><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
+          <div class="muted">
+            <span>{{ post.date | date: "%Y-%m-%d" }}</span>
+            {% if post.categories and post.categories.size > 0 %}
+              <span>• {{ post.categories | join: ' / ' }}</span>
+            {% endif %}
+          </div>
+        </header>
+        {% if post.excerpt %}
+          <p class="writeup-card__excerpt">{{ post.excerpt | strip_html | truncate: 180 }}</p>
+        {% endif %}
+        {% if post.tags and post.tags.size > 0 %}
+          <div class="tag-list">
+            {% for tag in post.tags %}
+              <span class="tag" data-tag="{{ tag | downcase }}">#{{ tag }}</span>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </article>
+    {% endfor %}
+  </div>
+  <div id="no-results" class="muted" style="display:none;">No writeups match your filters.</div>
+</section>
