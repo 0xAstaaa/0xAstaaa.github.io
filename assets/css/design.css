@@ -172,6 +172,27 @@ h3 { font-size: clamp(1.2rem, .8vw + .9rem, 1.4rem); font-weight: 700; }
 .tag[data-tag*="recon"]    { --tag-bg: rgba(155,140,255,0.18); --tag-border: rgba(155,140,255,0.34); --tag-text:#ede9ff; }
 .tag[data-tag*="privesc"]  { --tag-bg: rgba(255,106,122,0.18); --tag-border: rgba(255,106,122,0.34); --tag-text:#ffe0e4; }
 .tag[data-tag*="auth"]     { --tag-bg: rgba(255,106,213,0.18); --tag-border: rgba(255,106,213,0.34); --tag-text:#ffe1f7; }
+.tag[data-tag*="reverse"]  { --tag-bg: rgba(255,140,66,0.18); --tag-border: rgba(255,140,66,0.34); --tag-text:#ffe8d6; }
+.tag[data-tag*="forensics"]{ --tag-bg: rgba(90,200,255,0.18); --tag-border: rgba(90,200,255,0.34); --tag-text:#d6f2ff; }
+.tag[data-tag*="osint"]    { --tag-bg: rgba(133,255,153,0.18); --tag-border: rgba(133,255,153,0.34); --tag-text:#e3ffe8; }
+.tag[data-tag*="pwn"]  { --tag-bg: rgba(255,99,99,0.18); --tag-border: rgba(255,99,99,0.34); --tag-text:#ffe0e0; }
+.tag[data-tag*="misc"]     { --tag-bg: rgba(180,180,180,0.18); --tag-border: rgba(180,180,180,0.34); --tag-text:#f0f0f0; }
+.tag[data-tag*="hardware"],
+.tag[data-tag*="iot"]      { --tag-bg: rgba(255,162,106,0.18); --tag-border: rgba(255,162,106,0.34); --tag-text:#fff0e1; }
+.tag[data-tag*="malware"],
+.tag[data-tag*="analysis"] { --tag-bg: rgba(162,106,255,0.18); --tag-border: rgba(162,106,255,0.34); --tag-text:#f0e8ff; }
+.tag[data-tag*="password-cracking"],
+.tag[data-tag*="crack"] {
+  --tag-bg: rgba(255,143,120,0.18);   /* warm coral */
+  --tag-border: rgba(255,143,120,0.34);
+  --tag-text: #fff0ec;
+}
+.tag[data-tag*="hash"],
+.tag[data-tag*="hashing"] {
+  --tag-bg: rgba(120,196,255,0.18);   /* cool blue */
+  --tag-border: rgba(120,196,255,0.34);
+  --tag-text: #e9f6ff;
+}
 
 /* Search bar — redesigned */
 .filters { padding: 1rem 0 0; display: grid; gap: 1rem; }
