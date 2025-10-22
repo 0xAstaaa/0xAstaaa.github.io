@@ -62,6 +62,7 @@ for password in passes:
 
 This script will randomly generate ipv4 and read passwords from the wordlist given and will give you flag
 There we go, we found our flag! 🥳
+
 <img width="868" height="41" alt="image" src="https://github.com/user-attachments/assets/4155a37c-a1e8-4e66-bc5b-e3d4d76a9123" />
 
 Happy hacking!
