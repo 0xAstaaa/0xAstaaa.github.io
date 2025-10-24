@@ -14,13 +14,15 @@ Highlights:
 - Automated project listings fetched directly from GitHub  
 - Social and Discord automation experiments showcased with code snippets
 
-<div class="embed embed--badges">
+<div class="embed embed--badges embed--no-progress"
+     style="--thm-offset:-130px; --thm-iframe-height:900px; --thm-visible-height:620px;">
   <iframe
     src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=2763764"
     style="border:none;"
     loading="lazy"
     title="TryHackMe Badges"
-    referrerpolicy="no-referrer">
+    referrerpolicy="no-referrer"
+    scrolling="no">
   </iframe>
 </div>
 
