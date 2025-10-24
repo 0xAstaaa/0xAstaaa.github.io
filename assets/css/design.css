@@ -265,3 +265,38 @@ a:hover { color: var(--primary-700); }
 .prose table { width: 100%; border-collapse: collapse; overflow: hidden; border-radius: 12px; }
 .prose th, .prose td { padding: .6rem .8rem; border: 1px solid rgba(255,255,255,0.08); }
 .prose th { background: rgba(255,255,255,0.06); text-align: left; }
+
+.thm-embed iframe {
+  width: 100%;
+  min-height: 260px; /* Adjust as needed if the embed content is taller */
+  border: none;
+}
+
+.socials {
+  margin-top: 1rem;
+}
+
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.social-link .icon {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+}
+
+.social-link.instagram .icon svg {
+  width: 20px;
+  height: 20px;
+  fill: #E4405F; /* Instagram brand color */
+  transition: transform 0.15s ease;
+}
+
+.social-link:hover .icon svg {
+  transform: scale(1.05);
+}
