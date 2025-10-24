@@ -265,38 +265,54 @@ a:hover { color: var(--primary-700); }
 .prose table { width: 100%; border-collapse: collapse; overflow: hidden; border-radius: 12px; }
 .prose th, .prose td { padding: .6rem .8rem; border: 1px solid rgba(255,255,255,0.08); }
 .prose th { background: rgba(255,255,255,0.06); text-align: left; }
+/* ========================= */
+/* New: Embeds and Social UI */
+/* ========================= */
 
-.thm-embed iframe {
+/* Responsive embed container */
+.embed {
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius);
+  padding: .75rem;
+  box-shadow: var(--shadow);
+}
+.embed iframe {
+  display: block;
   width: 100%;
-  min-height: 260px; /* Adjust as needed if the embed content is taller */
-  border: none;
+  min-height: 260px;
+  border-radius: calc(var(--radius) - 6px);
+  background: var(--bg-soft);
 }
 
-.socials {
-  margin-top: 1rem;
-}
-
+/* Social list with Instagram icon */
+.social-list { list-style: none; padding: 0; margin: .5rem 0 0; display: flex; gap: .75rem; flex-wrap: wrap; }
 .social-link {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: .5rem;
+  padding: .5rem .8rem;
+  border-radius: 999px;
   text-decoration: none;
-  font-weight: 500;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.1);
+  transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease, background 200ms ease;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.35);
+}
+.social-link:hover { transform: translateY(-1px); border-color: rgba(255,255,255,0.18); }
+
+/* Instagram brand gradient */
+.social-link--instagram {
+  background: linear-gradient(45deg, #f58529, #feda77, #dd2a7b, #8134af, #515bd4);
+  background-size: 200% 200%;
+  animation: igGradient 8s ease infinite;
+}
+@keyframes igGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
-.social-link .icon {
-  width: 20px;
-  height: 20px;
-  display: inline-block;
-}
-
-.social-link.instagram .icon svg {
-  width: 20px;
-  height: 20px;
-  fill: #E4405F; /* Instagram brand color */
-  transition: transform 0.15s ease;
-}
-
-.social-link:hover .icon svg {
-  transform: scale(1.05);
-}
+/* Icon sizing and color */
+.icon { width: 18px; height: 18px; fill: currentColor; flex: 0 0 auto; }
+.icon--instagram { color: #fff; } /* icon inherits link color */
