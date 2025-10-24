@@ -270,19 +270,39 @@ a:hover { color: var(--primary-700); }
 /* ========================= */
 
 /* Responsive embed container */
-.embed {
-  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
-  border: 1px solid rgba(255,255,255,0.08);
+.embed--no-progress {
+  position: relative;
+  overflow: hidden;
+  /* Height of the area you want visible after cropping */
+  height: var(--thm-visible-height, 620px);
   border-radius: var(--radius);
-  padding: .75rem;
-  box-shadow: var(--shadow);
 }
-.embed iframe {
-  display: block;
+
+.embed--no-progress iframe {
+  /* Make the iframe viewport taller than the visible box so we can shift it up */
+  height: var(--thm-iframe-height, 900px);
   width: 100%;
-  min-height: 260px;
-  border-radius: calc(var(--radius) - 6px);
-  background: var(--bg-soft);
+  position: relative;
+  top: var(--thm-offset, -130px); /* negative = move content up (hides the top bar) */
+}
+
+/* Optional: responsive fine-tuning */
+@media (max-width: 900px) {
+  .embed--no-progress {
+    height: calc(var(--thm-visible-height, 620px) - 40px);
+  }
+  .embed--no-progress iframe {
+    top: calc(var(--thm-offset, -130px) - 20px);
+  }
+}
+
+@media (max-width: 640px) {
+  .embed--no-progress {
+    height: calc(var(--thm-visible-height, 620px) - 80px);
+  }
+  .embed--no-progress iframe {
+    top: calc(var(--thm-offset, -130px) - 40px);
+  }
 }
 
 /* Social list with Instagram icon */
