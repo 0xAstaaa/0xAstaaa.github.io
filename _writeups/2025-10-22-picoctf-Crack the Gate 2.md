@@ -30,7 +30,6 @@ def random_ipv4():
     return "{}.{}.{}.{}".format( random.randint(1, 254), random.randint(1, 254), random.randint(1, 254), random.randint(1, 254),)
 def Login(PassW , Ip):
     headers = {
-        'Host': 'amiable-citadel.picoctf.net:55983',
         'Accept-Language': 'fr-FR,fr;q=0.9',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36',
         'Content-Type': 'application/json',
