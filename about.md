@@ -14,30 +14,27 @@ Highlights:
 - Automated project listings fetched directly from GitHub  
 - Social and Discord automation experiments showcased with code snippets
 
-<h2>TryHackMe</h2>
-<div class="thm-embed">
+<div class="embed embed--badges">
   <iframe
     src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=2763764"
-    title="TryHackMe Badges"
+    style="border:none;"
     loading="lazy"
-  ></iframe>
+    title="TryHackMe Badges"
+    referrerpolicy="no-referrer">
+  </iframe>
 </div>
 
-<h2>Social</h2>
-<div class="socials">
-  <a
-    class="social-link instagram"
-    href="https://www.instagram.com/amiinee.bou"
-    target="_blank"
-    rel="noopener noreferrer"
-    aria-label="Instagram: @amiinee.bou"
-  >
-    <span class="icon" aria-hidden="true">
-      <!-- Inline Instagram SVG icon (no external dependency) -->
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" role="img" focusable="false">
-        <path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9S160.5 370.8 224.1 370.8 339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.2 0-74.7-33.5-74.7-74.7S182.9 181.2 224.1 181.2 298.8 214.7 298.8 256 265.3 330.6 224.1 330.6zM370.5 136.7a26.3 26.3 0 1 0-26.3-26.3 26.3 26.3 0 0 0 26.3 26.3zM398.8 80H49.2A49.2 49.2 0 0 0 0 129.2v249.6A49.2 49.2 0 0 0 49.2 428h349.6A49.2 49.2 0 0 0 448 378.8V129.2A49.2 49.2 0 0 0 398.8 80zm-5.5 298.8a17.6 17.6 0 0 1-17.6 17.6H72.3a17.6 17.6 0 0 1-17.6-17.6V152.3a17.6 17.6 0 0 1 17.6-17.6h303.4a17.6 17.6 0 0 1 17.6 17.6z"/>
+<ul class="social-list">
+  <li>
+    <a class="social-link social-link--instagram"
+       href="https://instagram.com/{{ site.author.instagram | default: 'amiinee.bou' }}"
+       target="_blank"
+       rel="noopener"
+       aria-label="Instagram">
+      <svg class="icon icon--instagram" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M7 2C4.24 2 2 4.24 2 7v10c0 2.76 2.24 5 5 5h10c2.76 0 5-2.24 5-5V7c0-2.76-2.24-5-5-5H7Zm0 2h10c1.66 0 3 1.34 3 3v10c0 1.66-1.34 3-3 3H7c-1.66 0-3-1.34-3-3V7c0-1.66 1.34-3 3-3Zm5 3.5A5.5 5.5 0 1 0 17.5 13 5.51 5.51 0 0 0 12 7.5Zm0 2A3.5 3.5 0 1 1 8.5 13 3.5 3.5 0 0 1 12 9.5Zm5.75-3.75a1.25 1.25 0 1 0 1.25 1.25 1.25 1.25 0 0 0-1.25-1.25Z"/>
       </svg>
-    </span>
-    <span>@amiinee.bou</span>
-  </a>
-</div>
+      <span>@{{ site.author.instagram | default: 'amiinee.bou' }}</span>
+    </a>
+  </li>
+</ul>
