@@ -21,7 +21,7 @@ nav:
 
 # Portfolio content (homepage)
 portfolio:
-  hero_title: "Mohammed-Amine Bouaafia AKA 0xAsta — Security Researcher & CTF Enthusiast"
+  hero_title: "0xAsta — Security Researcher & CTF Enthusiast"
   hero_subtitle: "I break things to learn how to build them better. Reverse engineering, web exploitation, crypto, and automation."
   cta_primary_text: "View Projects"
   cta_primary_url: "/projects/"
@@ -88,8 +88,8 @@ exclude:
   - "scripts"
 
 author:
-  name: "Mohammed-Amine Bouaafia"
-  email: "bouaafiastudies@gmail.com"
+  name: "Xxxx"
+  email: "unknown"
   instagram: "amiinee.bou"
 
 theme: null
