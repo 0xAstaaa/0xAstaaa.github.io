@@ -1,5 +1,5 @@
 ---
-title: "EpicSales CTF — Full Writeup"
+title: "Deadface EpicSales — Full Writeup"
 date: 2025-10-28
 categories:
   - ctftime
@@ -11,7 +11,6 @@ tags:
 
 This document summarizes the solutions for the EpicSales CTF challenges and lists the discovered flags at the end. Each phase includes the approach and the exact SQL used to extract the flag.
 
----
 
 ## Phase 1 — New Customer Signups After 2025-09-01
 
@@ -28,7 +27,6 @@ WHERE join_date >= '2025-09-01';
 
 **Flag:** `deadface{18}`
 
----
 
 ## Phase 2 — Product with Highest Average Rating
 
@@ -48,7 +46,7 @@ LIMIT 1;
 
 **Flag:** `deadface{VortexAudio Focus}`
 
----
+
 
 ## Phase 3 — Low Inventory by Facility
 
@@ -70,7 +68,7 @@ LIMIT 1;
 
 **Flag:** `deadface{ConnectGear SafeDrive 2TB 16}`
 
----
+
 
 ## Phase 4 — C-Suite Payroll Impact
 
@@ -87,7 +85,7 @@ WHERE role IN ('CEO','CTO','CFO');
 
 **Flag:** `deadface{$7391.20}`
 
----
+
 
 ## Phase 5 — High Engagement & Top Spending Customers (Extras)
 
@@ -103,7 +101,7 @@ WHERE role IN ('CEO','CTO','CFO');
 
 **Flag:** `deadface{valera.kenner@epicsales.shop 2274.4626}`
 
----
+
 
 ## Phase 6 — b1tfr34k Identity (Negative Reviews Hint)
 
@@ -141,7 +139,6 @@ WHERE r.review_id = 4464;
 
 **Flag:** `deadface{Billie Tournas}`
 
----
 
 ## All Flags (consolidated)
 
