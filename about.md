@@ -48,12 +48,15 @@ Highlights:
        target="_blank"
        rel="noopener"
        aria-label="TryHackMe">
-      <svg class="icon icon--thm" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <!-- Simple terminal icon -->
-        <path d="M3 4h18v16H3z"></path>
-        <path d="M6 8l4 4-4 4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
-        <path d="M12 16h6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"></path>
-      </svg>
+      <img
+        class="icon icon--img icon--thm"
+        src="https://tryhackme.com/img/favicon.png"
+        alt=""
+        aria-hidden="true"
+        width="18"
+        height="18"
+        decoding="async"
+        referrerpolicy="no-referrer" />
       <span>/{{ site.author.tryhackme | default: '0xAsta' }}</span>
     </a>
   </li>
