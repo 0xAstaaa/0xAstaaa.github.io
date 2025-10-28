@@ -1,0 +1,220 @@
+---
+title: "DeadFace : EpicSales"
+date: 2025-10-26
+categories:
+  - ctftime
+tags:
+  - sql
+---
+# EpicSales CTF – Automated Flag Retrieval Writeup
+
+**Challenge Series:** EpicSales – DEADFACE CTF  
+**Environment:** `env01.deadface.io:3306`  
+**Database:** `epicsales_db`  
+**Credentials:**  
+- Username: `epicsales`  
+- Password: `Slighted3-Charting-Valium`
+
+---
+
+## 🧩 Overview
+
+This Bash script automates the retrieval of all **EpicSales challenge flags** by connecting to the provided MySQL database.  
+It executes SQL queries for each task in the EpicSales series, following the same logic used in manual CTF solves.  
+
+📜 **Script Link:** [EpicSales Flag Fetcher (.sh)](https://pastebin.com/ZXMMfknM)
+
+The script uses strict error handling (`set -euo pipefail`) and the MySQL CLI to safely query the database.  
+Each flag corresponds to a specific challenge phase.
+
+---
+
+## 🧮 Phase 1 – New Customer Signups
+
+**Objective:** Count customers who signed up on or after **September 1, 2025.**
+
+**SQL:**
+```sql
+SELECT COUNT(*)
+FROM customers
+WHERE join_date >= '2025-09-01';
+```
+
+**Flag Format:**  
+`deadface{#}`
+
+---
+
+## ⭐ Phase 2 – Highest Rated Product
+
+**Objective:** Find the product with the **highest average rating.**
+
+**SQL:**
+```sql
+SELECT p.product_name
+FROM products p
+JOIN reviews r ON p.product_id = r.product_id
+GROUP BY p.product_id, p.product_name
+ORDER BY AVG(r.rating) DESC, COUNT(*) DESC, p.product_id ASC
+LIMIT 1;
+```
+
+**Flag Format:**  
+`deadface{product_name}`
+
+---
+
+## 📦 Phase 3 – Low Stock Product
+
+**Objective:** Identify the product and facility where total inventory quantity is **less than 5**.
+
+**SQL:**
+```sql
+SELECT p.product_name, f.facility_num
+FROM inventories i
+JOIN products p   ON p.product_id = i.product_id
+JOIN facilities f ON f.facility_id = i.facility_id
+GROUP BY i.product_id, i.facility_id
+HAVING SUM(i.quantity) < 5
+ORDER BY SUM(i.quantity) ASC, p.product_name ASC, f.facility_num ASC
+LIMIT 1;
+```
+
+**Flag Format:**  
+`deadface{product_name facility_num}`
+
+---
+
+## 💰 Phase 4 – C-Suite Payroll Impact
+
+**Objective:** Calculate the **total pay_rate** of all employees in **C-suite roles** (`CEO`, `CTO`, `CFO`).
+
+**SQL:**
+```sql
+SELECT ROUND(SUM(pay_rate), 2)
+FROM employees
+WHERE role IN ('CEO','CTO','CFO');
+```
+
+**Flag Format:**  
+`deadface{$#.##}`
+
+---
+
+## 📧 Phase 5 – High Engagement Customer
+
+**Objective:** Identify the customer with the **most orders but no reviews**.
+
+**SQL:**
+```sql
+SELECT c.email
+FROM customers c
+JOIN orders o ON o.customer_id = c.customer_id
+LEFT JOIN reviews r ON r.customer_id = c.customer_id
+WHERE r.review_id IS NULL
+GROUP BY c.customer_id, c.email
+ORDER BY COUNT(DISTINCT o.order_id) DESC, c.customer_id ASC
+LIMIT 1;
+```
+
+**Flag Format:**  
+`deadface{customer_email}`
+
+---
+
+## 💳 Phase 6 – Top Spending Customer
+
+**Objective:** Find the customer who has spent the **most money** (`quantity × price`).
+
+**SQL:**
+```sql
+SELECT c.first_name, c.last_name
+FROM customers c
+JOIN orders o       ON o.customer_id = c.customer_id
+JOIN order_items oi ON oi.order_id = o.order_id
+JOIN products p     ON p.product_id = oi.product_id
+GROUP BY c.customer_id, c.first_name, c.last_name
+ORDER BY SUM(oi.quantity * p.price) DESC, c.customer_id ASC
+LIMIT 1;
+```
+
+**Flag Format:**  
+`deadface{FirstName LastName}`
+
+---
+
+## 🖥️ Phase 7 – IT Manager at Lowest-Average Facility
+
+**Objective:** Identify the IT Manager working at the facility with the **lowest average inventory quantity.**
+
+**SQL:**
+```sql
+SELECT i.facility_id, AVG(i.quantity) AS avg_qty
+FROM inventories i
+GROUP BY i.facility_id
+ORDER BY avg_qty ASC
+LIMIT 1;
+```
+
+Then find the IT Manager:
+```sql
+SELECT e.email
+FROM employee_assignments ea
+JOIN employees e ON e.employee_id = ea.employee_id
+WHERE ea.facility_id = <facility_id>
+  AND e.role LIKE '%IT Manager%'
+ORDER BY e.start_date DESC, e.employee_id ASC
+LIMIT 1;
+```
+
+**Flag Format:**  
+`deadface{email avg_quantity}`
+
+---
+
+## 🧠 Phase 8 – b1tfr34k Identity (Manual Investigation)
+
+**Hint:**  
+> Appears to harbor strong negative sentiments towards EpicSales.
+
+**Steps:**
+1. Check the `reviews` table:
+    ```sql
+    SELECT review_id, customer_id, comment FROM reviews;
+    ```
+2. You’ll see only **3 comments**. The negative one has `customer_id = 14644`.
+3. Lookup that customer:
+    ```sql
+    SELECT first_name, last_name FROM customers WHERE customer_id = 14644;
+    ```
+4. Result → **Billie Tournas**
+
+**Final Flag:**  
+`deadface{Billie Tournas}`
+
+---
+
+## ✅ Example Output
+
+```
+Signups Flag: deadface{42}
+Top Product Flag: deadface{HyperDrive Console}
+Low Stock Product Flag: deadface{NeonSky Tablet 32}
+C-Suite Payroll Flag: deadface{$2400.00}
+High Engagement Customer Flag: deadface{user@email.com}
+Top Spending Customer Flag: deadface{Jane Doe}
+IT Manager at Lowest-Average Facility Flag: deadface{it.manager@epicsales.io 3.2500}
+b1tfr34k Identity Flag: deadface{Billie Tournas}
+```
+
+---
+
+## 🧾 Notes
+
+- Script uses `set -euo pipefail` for safe execution.  
+- Queries are optimized for readability and reliability.  
+- Only Phase 8 (b1tfr34k identity) requires manual verification.  
+
+---
+
+**End of Writeup**
