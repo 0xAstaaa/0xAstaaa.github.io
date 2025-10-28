@@ -336,3 +336,28 @@ a:hover { color: var(--primary-700); }
 /* Icon sizing and color */
 .icon { width: 18px; height: 18px; fill: currentColor; flex: 0 0 auto; }
 .icon--instagram { color: #fff; } /* icon inherits link color */
+.social-link--github {
+  background: linear-gradient(180deg, #3b3b3b, #161b22);
+  border-color: rgba(255,255,255,0.14);
+}
+.social-link--github:hover {
+  box-shadow: 0 14px 34px rgba(22,27,34,0.45);
+}
+.icon--github { color: #fff; }
+
+.social-link--tryhackme {
+  background: linear-gradient(45deg, #d4202b, #ff4d4d, #ff7a7a);
+  background-size: 180% 180%;
+  animation: thmPulse 8s ease infinite;
+  border-color: rgba(255,255,255,0.14);
+}
+.social-link--tryhackme:hover {
+  box-shadow: 0 14px 34px rgba(212,32,43,0.45);
+}
+.icon--thm { color: #fff; }
+
+@keyframes thmPulse {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
