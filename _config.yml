@@ -9,6 +9,7 @@ project_username: "bouaafia"
 ctf_categories:
   - TryHackMe
   - picoCTF
+  - CtfTime ctfs
 
 # Navigation (no Submit)
 nav:
