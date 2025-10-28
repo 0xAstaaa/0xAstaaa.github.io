@@ -91,6 +91,8 @@ exclude:
 author:
   name: "0xAsta"
   email: "unknown"
-  instagram: "amiinee.bou"
+  instagram: "amiinee.bou"   
+  github: "bouaafia"        
+  tryhackme: "0xAsta"
 
 theme: null
