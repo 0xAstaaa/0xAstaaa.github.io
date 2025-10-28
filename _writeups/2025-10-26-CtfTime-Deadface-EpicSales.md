@@ -11,6 +11,15 @@ tags:
 
 This document summarizes the solutions for the EpicSales CTF challenges and lists the discovered flags at the end. Each phase includes the approach and the exact SQL used to extract the flag.
 
+## 🧩 Overview
+
+This Bash script automates the retrieval of all **EpicSales challenge flags** by connecting to the provided MySQL database.  
+It executes SQL queries for each task in the EpicSales series, following the same logic used in manual CTF solves.  
+
+📜 **Script Link:** [EpicSales Flag Fetcher (.sh)](https://pastebin.com/ZXMMfknM)
+
+The script uses strict error handling (`set -euo pipefail`) and the MySQL CLI to safely query the database.  
+Each flag corresponds to a specific challenge phase.
 
 ## Phase 1 — New Customer Signups After 2025-09-01
 
