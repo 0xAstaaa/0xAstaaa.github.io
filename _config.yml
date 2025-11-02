@@ -10,6 +10,7 @@ ctf_categories:
   - TryHackMe
   - picoCTF
   - Ctftime
+  - Independent
 
 # Navigation (no Submit)
 nav:
