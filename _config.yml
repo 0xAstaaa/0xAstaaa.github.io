@@ -11,6 +11,7 @@ ctf_categories:
   - picoCTF
   - Ctftime
   - Independent
+  - HackTheBox
 
 # Navigation (no Submit)
 nav:
