@@ -1,11 +1,10 @@
 title: "0xAsta"
 description: "Writeups, projects, and a personal portfolio."
-url: "" # e.g., https://bouaafia.github.io
-baseurl: "" # e.g., /site if publishing to a project repo
+url: "" 
+baseurl: "" 
 
-project_username: "bouaafia"
+project_username: "0xAstaaa"
 
-# Default CTF categories; edit to add more
 ctf_categories:
   - TryHackMe
   - picoCTF
@@ -13,7 +12,6 @@ ctf_categories:
   - Independent
   - HackTheBox
 
-# Navigation (no Submit)
 nav:
   - name: "Writeups"
     url: "/writeups/"
@@ -22,7 +20,6 @@ nav:
   - name: "About"
     url: "/about/"
 
-# Portfolio content (homepage)
 portfolio:
   hero_title: "0xAsta — Security Researcher & CTF Enthusiast"
   hero_subtitle: "I break things to learn how to build them better. Reverse engineering, web exploitation, crypto, and automation."
@@ -94,7 +91,7 @@ author:
   name: "0xAsta"
   email: "unknown"
   instagram: "x0jb"   
-  github: ""        
+  github: "0xAstaaa"        
   tryhackme: "0xAsta"
 
 theme: null
