@@ -1,5 +1,5 @@
 ---
-title: "HTB Low Logic — Full but Easy Writeup"
+title: "HTB Low Logic — Writeup"
 date: 2025-11-05
 categories:
   - HackTheBox
@@ -10,7 +10,7 @@ tags:
   - reverse-engineering
 ---
 
-# 🧩 HTB Low Logic — Full but Easy Writeup
+# 🧩 HTB Low Logic —  Writeup
 
 ## Overview
 
