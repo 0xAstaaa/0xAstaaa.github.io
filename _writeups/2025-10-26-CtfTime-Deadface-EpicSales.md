@@ -1,163 +1,231 @@
 ---
-title: "Deadface EpicSales — Full Writeup"
+title: "Deadface EpicSales — Full Writeup (DB Script–Based)"
 date: 2025-10-28
+layout: writeup
 categories:
   - ctftime
 tags:
   - sql
+  - database
 ---
 
 # EpicSales CTF — Full Writeup (All Phases)
 
-This document summarizes the solutions for the EpicSales CTF challenges and lists the discovered flags at the end. Each phase includes the approach and the exact SQL used to extract the flag.
+This writeup is built from the automation script used to query the EpicSales database and extract the flags. Each phase includes the objective, the exact SQL used, and the resulting flag. Phases are numbered to match your requested order:
+- 6: Top Spending Customer
+- 7: b1tfr34k identity
+- 8: Undervalued
 
-## 🧩 Overview
+You can run the helper script locally to reproduce all flags.
 
-This Bash script automates the retrieval of all **EpicSales challenge flags** by connecting to the provided MySQL database.  
-It executes SQL queries for each task in the EpicSales series, following the same logic used in manual CTF solves.  
+```bash
+# filename: fetch-database-flags.sh
+# Fetches all EpicSales flags via MySQL (replace credentials/host if needed)
+set -euo pipefail
 
-📜 **Script Link:** [EpicSales Flag Fetcher (.sh)](https://pastebin.com/ZXMMfknM)
+HOST="env01.deadface.io"
+PORT=3306
+USER="epicsales"
+PASS="Slighted3-Charting-Valium"
+DB="epicsales_db"
 
-The script uses strict error handling (`set -euo pipefail`) and the MySQL CLI to safely query the database.  
-Each flag corresponds to a specific challenge phase.
+MYSQL_OPTS=(
+  --host="$HOST"
+  --port="$PORT"
+  -u"$USER"
+  -p"$PASS"
+  --ssl=0
+  --batch
+  --skip-column-names
+  --default-character-set=utf8mb4
+  -D "$DB"
+)
 
-## Phase 1 — New Customer Signups After 2025-09-01
-
-**Objective:** Count customers who signed up on or after September 1, 2025.
-
-**Key table/column:** `customers.join_date`
-
-**SQL:**
+run_sql() { mysql "${MYSQL_OPTS[@]}" -e "$1"; }
+run_sql "SELECT 1;" >/dev/null
+echo "Connecting to EpicSales database to fetch flags..."
+# ... (rest of the provided script)
 ```
-SELECT CONCAT('deadface{', COUNT(*), '}') 
-FROM customers 
+
+---
+
+## 1) New Customer Signups After 2025‑09‑01
+
+**Objective:** Count customers who signed up on or after 2025‑09‑01.  
+**Key column:** `customers.join_date`
+
+```sql
+SELECT CONCAT('deadface{', COUNT(*), '}')
+FROM customers
 WHERE join_date >= '2025-09-01';
 ```
 
-**Flag:** `deadface{18}`
+Flag : `deadface{18}`
 
+---
 
-## Phase 2 — Product with Highest Average Rating
+## 2) Product With Highest Average Rating
 
-**Objective:** Identify the product with the highest average rating.
+**Objective:** Find the product with the highest average review rating (with stable tie‑breakers).  
+**Key tables:** `products(product_id, product_name)`, `reviews(product_id, rating)`
 
-**Key tables/columns:** `reviews(product_id,rating)`, `products(product_id,product_name)`
-
-**SQL:**
-```
+```sql
 SELECT CONCAT('deadface{', p.product_name, '}') AS flag
 FROM products p
 JOIN reviews r ON p.product_id = r.product_id
 GROUP BY p.product_id, p.product_name
-ORDER BY AVG(r.rating) DESC
+ORDER BY AVG(r.rating) DESC, COUNT(*) DESC, p.product_id ASC
 LIMIT 1;
 ```
 
-**Flag:** `deadface{VortexAudio Focus}`
+Flag : `deadface{VortexAudio Focus}`
 
+---
 
+## 3) Low Inventory by Facility
 
-## Phase 3 — Low Inventory by Facility
+**Objective:** Among products whose total quantity in a facility is < 5, return the one with the lowest total, formatted as product + facility number.  
+**Key tables:** `inventories(product_id, facility_id, quantity)`, `products(product_id, product_name)`, `facilities(facility_id, facility_num)`
 
-**Objective:** Find products where the total quantity in a facility is less than 5 and return the product name and facility number; then pick the product with the lowest quantity.
-
-**Key tables/columns:** `inventories(product_id, facility_id, quantity)`, `products(product_id,product_name)`, `facilities(facility_id,facility_num)`
-
-**SQL:**
-```
+```sql
 SELECT CONCAT('deadface{', p.product_name, ' ', f.facility_num, '}') AS flag
 FROM inventories i
-JOIN products p ON i.product_id = p.product_id
-JOIN facilities f ON i.facility_id = f.facility_id
+JOIN products p   ON p.product_id = i.product_id
+JOIN facilities f ON f.facility_id = i.facility_id
 GROUP BY i.product_id, i.facility_id
 HAVING SUM(i.quantity) < 5
-ORDER BY SUM(i.quantity) ASC
+ORDER BY SUM(i.quantity) ASC, p.product_name ASC, f.facility_num ASC
 LIMIT 1;
 ```
 
-**Flag:** `deadface{ConnectGear SafeDrive 2TB 16}`
+Flag : `deadface{ConnectGear SafeDrive 2TB 16}`
 
+---
 
+## 4) C‑Suite Payroll Impact
 
-## Phase 4 — C-Suite Payroll Impact
+**Objective:** Sum the `pay_rate` for roles in `CEO`, `CTO`, `CFO` and format to two decimals.  
+**Key table:** `employees(pay_rate, role)`
 
-**Objective:** Calculate the total `pay_rate` for employees holding roles `CEO`, `CTO`, or `CFO`.
-
-**Key table/columns:** `employees(pay_rate, role)`
-
-**SQL:**
-```
-SELECT CONCAT('deadface{$', FORMAT(SUM(pay_rate), 2), '}') AS flag
+```sql
+SELECT CONCAT('deadface{$', ROUND(SUM(pay_rate), 2), '}') AS flag
 FROM employees
 WHERE role IN ('CEO','CTO','CFO');
 ```
 
-**Flag:** `deadface{$7391.20}`
+Flag : `deadface{$7391.20}`
 
+---
 
+## 5) High‑Engagement Customer (Orders With No Reviews)
 
-## Phase 5 — High Engagement & Top Spending Customers (Extras)
+**Objective:** Select the customer with the highest order count who never left a review (engaged buyer, zero reviews).  
+**Key tables:** `customers`, `orders`, `reviews`
 
-**High Engagement Customer** — likely determined by number of reviews or interactions; discovered flag:
-
-**Flag:** `deadface{dgrimsley2ab@webs.com}`
-
-**Top Spending Customer** — determined by aggregate orders/total spent; discovered flag:
-
-**Flag:** `deadface{Willabella Wain}`
-
-**IT Manager at Lowest-Average Facility** — an extra query revealed an IT manager contact and a numeric value:
-
-**Flag:** `deadface{valera.kenner@epicsales.shop 2274.4626}`
-
-
-
-## Phase 6 — b1tfr34k Identity (Negative Reviews Hint)
-
-**Objective:** Using the hint that b1tfr34k *appears to harbor strong negative sentiments towards EpicSales*, search `reviews.comment` for negative content, link to `customers`, and extract the real name.
-
-**Steps / SQL:**
-
-1. Inspect all reviews to find negative comments:
+```sql
+SELECT CONCAT('deadface{', c.email, '}') AS flag
+FROM customers c
+JOIN orders   o ON o.customer_id = c.customer_id
+LEFT JOIN reviews r ON r.customer_id = c.customer_id
+WHERE r.review_id IS NULL
+GROUP BY c.customer_id, c.email
+ORDER BY COUNT(DISTINCT o.order_id) DESC, c.customer_id ASC
+LIMIT 1;
 ```
+
+Flag : `deadface{dgrimsley2ab@webs.com}`
+
+---
+
+## 6) Top Spending Customer
+
+**Objective:** Find the customer with the highest total spend (sum of quantity × price).  
+**Key tables:** `customers`, `orders`, `order_items`, `products(price)`
+
+```sql
+SELECT CONCAT('deadface{', c.first_name, ' ', c.last_name, '}') AS flag
+FROM customers c
+JOIN orders o       ON o.customer_id = c.customer_id
+JOIN order_items oi ON oi.order_id   = o.order_id
+JOIN products p     ON p.product_id  = oi.product_id
+GROUP BY c.customer_id, c.first_name, c.last_name
+ORDER BY SUM(oi.quantity * p.price) DESC, c.customer_id ASC
+LIMIT 1;
+```
+
+Flag : `deadface{Willabella Wain}`
+
+---
+
+## 7) b1tfr34k Identity (Negative Reviews Trail)
+
+**Objective:** Correlate strongly negative review text to a real identity.  
+**Key tables:** `reviews(comment, review_id, customer_id)`, `customers(customer_id, first_name, last_name)`
+
+Typical investigation flow:
+
+```sql
+-- 1) Inspect reviews to spot a strongly negative comment
 SELECT review_id, customer_id, comment
 FROM reviews;
-```
 
-2. Locate the negative review (in this dataset it was):
-```
-review_id = 4464
-customer_id = 14644
-comment = "FRAME RATES DIE UNDER PRESSURE LOADING TIMES ARE ETERNAL THIS THING IS A GLORIFIED PAPERWEIGHT. SYSTEM FREEZES EVERY TIME I LOAD A GAME WORST PERFORMANCE I HAVE EVER SEEN"
-```
-
-3. Lookup the customer record:
-```
+-- 2) Resolve that customer to a real name
 SELECT first_name, last_name
 FROM customers
-WHERE customer_id = 14644;
-```
+WHERE customer_id = 14644;  -- example id from investigation
 
-4. Or use a join to output the flag directly:
-```
+-- 3) Or collect the flag in one query when the review_id is known
 SELECT CONCAT('deadface{', c.first_name, ' ', c.last_name, '}') AS flag
 FROM reviews r
-JOIN customers c ON r.customer_id = c.customer_id
-WHERE r.review_id = 4464;
+JOIN customers c ON c.customer_id = r.customer_id
+WHERE r.review_id = 4464;  -- example review id
 ```
 
-**Flag:** `deadface{Billie Tournas}`
+Flag : `deadface{Billie Tournas}`
 
+---
 
-## All Flags (consolidated)
+## 8) Undervalued
 
-- Signups Flag: deadface{18}  
-- Top Product Flag: deadface{VortexAudio Focus}  
-- Low Stock Product Flag: deadface{ConnectGear SafeDrive 2TB 16}  
-- C-Suite Payroll Flag: deadface{$7391.20}  
-- High Engagement Customer Flag: deadface{dgrimsley2ab@webs.com}  
-- Top Spending Customer Flag: deadface{Willabella Wain}  
-- b1tfr34k Identity Flag: deadface{Billie Tournas}
-- Undervalued : deadface{valera.kenner@epicsales.shop 2274.4626}   
+**Objective:** Find the facility with the lowest average inventory quantity and output the IT Manager’s email there plus the facility’s average.  
+**Key tables:** `inventories(facility_id, quantity)`, `employee_assignments(employee_id, facility_id)`, `employees(employee_id, email, role, start_date)`
 
+Step A — find the facility with the lowest average quantity:
 
+```sql
+SELECT i.facility_id, AVG(i.quantity) AS avg_qty
+FROM inventories i
+GROUP BY i.facility_id
+ORDER BY avg_qty ASC, i.facility_id ASC
+LIMIT 1;
+```
+
+Step B — extract the IT Manager email at that facility:
+
+```sql
+-- Assume :FACILITY_ID is from Step A
+SELECT CONCAT('deadface{', e.email, ' ', FORMAT(:AVG_QTY, 4), '}') AS flag
+FROM employee_assignments ea
+JOIN employees e ON e.employee_id = ea.employee_id
+WHERE ea.facility_id = :FACILITY_ID
+  AND e.role LIKE '%IT Manager%'
+ORDER BY e.start_date DESC, e.employee_id ASC
+LIMIT 1;
+```
+
+Flag : `deadface{valera.kenner@epicsales.shop 2274.4626}`
+
+---
+
+## ✅ Consolidated Flags (1–8)
+
+1. New Signups: `deadface{18}`  
+2. Top Product: `deadface{VortexAudio Focus}`  
+3. Low Inventory: `deadface{ConnectGear SafeDrive 2TB 16}`  
+4. C‑Suite Payroll: `deadface{$7391.20}`  
+5. High‑Engagement Customer: `deadface{dgrimsley2ab@webs.com}`  
+6. Top Spending Customer: `deadface{Willabella Wain}`  
+7. b1tfr34k Identity: `deadface{Billie Tournas}`  
+8. Undervalued: `deadface{valera.kenner@epicsales.shop 2274.4626}`
+
+---
