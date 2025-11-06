@@ -28,7 +28,7 @@ Each flag corresponds to a specific challenge phase.
 **Key table/column:** `customers.join_date`
 
 **SQL:**
-```sql
+```
 SELECT CONCAT('deadface{', COUNT(*), '}') 
 FROM customers 
 WHERE join_date >= '2025-09-01';
@@ -44,7 +44,7 @@ WHERE join_date >= '2025-09-01';
 **Key tables/columns:** `reviews(product_id,rating)`, `products(product_id,product_name)`
 
 **SQL:**
-```sql
+```
 SELECT CONCAT('deadface{', p.product_name, '}') AS flag
 FROM products p
 JOIN reviews r ON p.product_id = r.product_id
@@ -64,7 +64,7 @@ LIMIT 1;
 **Key tables/columns:** `inventories(product_id, facility_id, quantity)`, `products(product_id,product_name)`, `facilities(facility_id,facility_num)`
 
 **SQL:**
-```sql
+```
 SELECT CONCAT('deadface{', p.product_name, ' ', f.facility_num, '}') AS flag
 FROM inventories i
 JOIN products p ON i.product_id = p.product_id
@@ -86,7 +86,7 @@ LIMIT 1;
 **Key table/columns:** `employees(pay_rate, role)`
 
 **SQL:**
-```sql
+```
 SELECT CONCAT('deadface{$', FORMAT(SUM(pay_rate), 2), '}') AS flag
 FROM employees
 WHERE role IN ('CEO','CTO','CFO');
@@ -119,7 +119,7 @@ WHERE role IN ('CEO','CTO','CFO');
 **Steps / SQL:**
 
 1. Inspect all reviews to find negative comments:
-```sql
+```
 SELECT review_id, customer_id, comment
 FROM reviews;
 ```
@@ -132,14 +132,14 @@ comment = "FRAME RATES DIE UNDER PRESSURE LOADING TIMES ARE ETERNAL THIS THING I
 ```
 
 3. Lookup the customer record:
-```sql
+```
 SELECT first_name, last_name
 FROM customers
 WHERE customer_id = 14644;
 ```
 
 4. Or use a join to output the flag directly:
-```sql
+```
 SELECT CONCAT('deadface{', c.first_name, ' ', c.last_name, '}') AS flag
 FROM reviews r
 JOIN customers c ON r.customer_id = c.customer_id
