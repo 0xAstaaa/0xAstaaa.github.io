@@ -157,7 +157,7 @@ WHERE r.review_id = 4464;
 - C-Suite Payroll Flag: deadface{$7391.20}  
 - High Engagement Customer Flag: deadface{dgrimsley2ab@webs.com}  
 - Top Spending Customer Flag: deadface{Willabella Wain}  
-- IT Manager at Lowest-Average Facility Flag: deadface{valera.kenner@epicsales.shop 2274.4626}  
-- b1tfr34k Identity Flag: deadface{Billie Tournas}  
+- b1tfr34k Identity Flag: deadface{Billie Tournas}
+- Undervalued : deadface{valera.kenner@epicsales.shop 2274.4626}   
 
 
