@@ -17,7 +17,7 @@ This writeup is built from the automation script used to query the EpicSales dat
 - 8: Undervalued
 
 You can run the helper script locally to reproduce all flags.
-
+-> Link : [fetch-database-flags.sh](https://pastebin.com/ZXMMfknM)
 ```bash
 # filename: fetch-database-flags.sh
 # Fetches all EpicSales flags via MySQL (replace credentials/host if needed)
@@ -41,9 +41,6 @@ MYSQL_OPTS=(
   -D "$DB"
 )
 
-run_sql() { mysql "${MYSQL_OPTS[@]}" -e "$1"; }
-run_sql "SELECT 1;" >/dev/null
-echo "Connecting to EpicSales database to fetch flags..."
 # ... (rest of the provided script)
 ```
 
