@@ -1,4 +1,5 @@
-// Enhance all fenced code blocks: toolbar, copy, language label, optional filename, expand/collapse
+
+
 (function(){
   const LANG_LABELS = {
     bash: 'Bash', sh: 'Bash', shell: 'Bash', 'shell-session': 'Shell',
@@ -21,11 +22,11 @@
     return LANG_LABELS[key] || (key ? key.replace(/^\w/, c => c.toUpperCase()) : 'Text');
   }
 
-  function detectFilenameFromFirstLine(codeEl){
-    // Look for "# file: name", "// file: name", "; file: name", "-- file: name"
+  function detectFilename(codeEl){
+    // First non-empty line comment "filename:" / "file:" / "fname:"
     const raw = codeEl.textContent || '';
-    const first = raw.split('\n').find(l => l.trim().length > 0) || '';
-    const m = first.match(/^\s*(#|\/\/|;|--)?\s*(file(?:name)?|fname)\s*:\s*(.+)$/i);
+    const firstLine = raw.split('\n').find(l => l.trim().length > 0) || '';
+    const m = firstLine.match(/^\s*(#|\/\/|;|--)?\s*(file(?:name)?|fname)\s*:\s*(.+)$/i);
     return m ? m[3].trim() : '';
   }
 
@@ -52,6 +53,7 @@
       navigator.clipboard.writeText(text).then(()=> showToast('Copied'), ()=> showToast('Copy failed'));
       return;
     }
+    // Fallback
     const ta = document.createElement('textarea');
     ta.value = text;
     ta.style.position = 'fixed';
@@ -63,9 +65,11 @@
   }
 
   function enhance(pre, code){
-    // Build wrapper
+    // Skip if already enhanced
+    if(pre.closest('.code-block')) return;
+
     const wrapper = document.createElement('figure');
-    wrapper.className = 'code-block is-collapsed';
+    wrapper.className = 'code-block';
 
     const toolbar = document.createElement('div');
     toolbar.className = 'code-toolbar';
@@ -86,14 +90,12 @@
     langEl.textContent = lang;
     id.appendChild(langEl);
 
-    // Optional filename: from data-filename attr or detected comment
-    const filename = code.getAttribute('data-filename') || detectFilenameFromFirstLine(code);
+    const filename = code.getAttribute('data-filename') || detectFilename(code);
     if(filename){
       const fileEl = document.createElement('span');
       fileEl.className = 'code-filename';
       fileEl.textContent = filename;
       id.appendChild(fileEl);
-      wrapper.dataset.filename = filename;
     }
 
     const actions = document.createElement('div');
@@ -105,69 +107,33 @@
     copyBtn.setAttribute('aria-label', 'Copy code');
     copyBtn.textContent = 'Copy';
 
-    const expandBtn = document.createElement('button');
-    expandBtn.type = 'button';
-    expandBtn.className = 'code-btn expand-btn';
-    expandBtn.setAttribute('aria-expanded', 'false');
-    expandBtn.textContent = 'Expand';
-
     actions.appendChild(copyBtn);
-    actions.appendChild(expandBtn);
 
     toolbar.appendChild(id);
     toolbar.appendChild(actions);
 
-    // Fade overlay for collapsed state
-    const fade = document.createElement('div');
-    fade.className = 'code-fade';
-
-    // Insert DOM
+    // Insert structure
     pre.parentNode.insertBefore(wrapper, pre);
     wrapper.appendChild(toolbar);
     wrapper.appendChild(pre);
-    wrapper.appendChild(fade);
 
     // Prepare copy
     pre.classList.add('copyable');
     const getCodeText = ()=> (code.innerText || code.textContent || '').replace(/\u00A0/g,' ');
 
+    // Click anywhere (except toolbar buttons) copies
     pre.addEventListener('click', (ev)=>{
-      const isBtn = ev.target === copyBtn || ev.target === expandBtn || ev.target.closest('.code-btn');
-      if(isBtn) return;
       copyText(getCodeText());
     });
-    copyBtn.addEventListener('click', (ev)=> {
+
+    copyBtn.addEventListener('click', (ev)=>{
       ev.stopPropagation();
       copyText(getCodeText());
     });
 
-    // Expand/collapse based on actual height
-    function updateCollapsed(){
-      // If short, un-collapse and hide button
-      const tooTall = pre.scrollHeight > 420;
-      if(!tooTall){
-        wrapper.classList.remove('is-collapsed');
-        expandBtn.style.display = 'none';
-      }else{
-        wrapper.classList.add('is-collapsed');
-        expandBtn.style.display = '';
-        expandBtn.setAttribute('aria-expanded', 'false');
-        expandBtn.textContent = 'Expand';
-      }
-    }
-    updateCollapsed();
-    window.addEventListener('resize', ()=> { updateCollapsed(); });
-
-    expandBtn.addEventListener('click', (ev)=>{
-      ev.stopPropagation();
-      const collapsed = wrapper.classList.toggle('is-collapsed');
-      expandBtn.setAttribute('aria-expanded', (!collapsed).toString());
-      expandBtn.textContent = collapsed ? 'Expand' : 'Collapse';
-    });
-
-    // Keyboard access for copy on Enter/Space
+    // Keyboard accessibility
     pre.setAttribute('tabindex','0');
-    pre.addEventListener('keydown', function(e){
+    pre.addEventListener('keydown', e=>{
       if(e.key === 'Enter' || e.key === ' '){
         e.preventDefault();
         copyText(getCodeText());
@@ -176,17 +142,17 @@
   }
 
   function init(){
-    // Avoid double-enhancing
     const blocks = document.querySelectorAll('pre > code');
     blocks.forEach(code => {
       const pre = code.closest('pre');
-      if(!pre || pre.closest('.code-block')) return;
+      if(!pre) return;
       enhance(pre, code);
     });
   }
 
   if(document.readyState === 'loading'){
     document.addEventListener('DOMContentLoaded', init);
-  } else init();
-
+  } else {
+    init();
+  }
 })();
