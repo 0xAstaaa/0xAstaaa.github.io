@@ -1,0 +1,58 @@
+/* Disable all progress/reading bars site-wide */
+
+/* Native HTML <progress> */
+progress { display: none !important; }
+
+/* ARIA-based progress bars */
+[role="progressbar"] { display: none !important; }
+
+/* Common class names used by themes/plugins */
+.progress,
+.progress-bar,
+.reading-progress,
+.reading-position,
+.reading-bar,
+.top-progress,
+.meter,
+.meter-bar,
+#reading-progress {
+  display: none !important;
+}
+
+/* If a theme reserves space at the top for a progress bar, remove it */
+body.has-reading-progress,
+body.has-progress {
+  --progress-height: 0px;
+  padding-top: 0 !important;
+}
+
+/* Embedded pages: crop away top bars (use with .embed--no-progress wrapper) */
+.embed--no-progress {
+  position: relative;
+  overflow: hidden;
+  height: var(--visible-height, 620px);
+  border-radius: var(--radius, 16px);
+}
+.embed--no-progress iframe {
+  height: var(--iframe-height, 900px);
+  width: 100%;
+  position: relative;
+  top: var(--offset, -130px); /* negative moves content up, hiding any top bar */
+}
+
+@media (max-width: 900px) {
+  .embed--no-progress {
+    height: calc(var(--visible-height, 620px) - 40px);
+  }
+  .embed--no-progress iframe {
+    top: calc(var(--offset, -130px) - 20px);
+  }
+}
+@media (max-width: 640px) {
+  .embed--no-progress {
+    height: calc(var(--visible-height, 620px) - 80px);
+  }
+  .embed--no-progress iframe {
+    top: calc(var(--offset, -130px) - 40px);
+  }
+}
