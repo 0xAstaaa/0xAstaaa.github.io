@@ -172,13 +172,13 @@ FROM reviews;
 -- 2) Resolve that customer to a real name
 SELECT first_name, last_name
 FROM customers
-WHERE customer_id = 14644;  -- example id from investigation
+WHERE customer_id = 14644;  
 
 -- 3) Or collect the flag in one query when the review_id is known
 SELECT CONCAT('deadface{', c.first_name, ' ', c.last_name, '}') AS flag
 FROM reviews r
 JOIN customers c ON c.customer_id = r.customer_id
-WHERE r.review_id = 4464;  -- example review id
+WHERE r.review_id = 4464;
 ```
 
 Flag : `deadface{Billie Tournas}`
