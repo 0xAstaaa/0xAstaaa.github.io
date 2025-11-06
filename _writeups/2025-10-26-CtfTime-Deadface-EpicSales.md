@@ -12,6 +12,12 @@ tags:
 # EpicSales CTF — Full Writeup (All Phases)
 
 This writeup is built from the automation script used to query the EpicSales database and extract the flags. Each phase includes the objective, the exact SQL used, and the resulting flag. Phases are numbered to match your requested order:
+
+- 1: New Signups
+- 2: Top Product
+- 3: Low Inventory
+- 4: C‑Suite Payroll
+- 5: High‑Engagement Customer
 - 6: Top Spending Customer
 - 7: b1tfr34k identity
 - 8: Undervalued
