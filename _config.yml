@@ -11,6 +11,7 @@ ctf_categories:
   - Ctftime
   - Independent
   - HackTheBox
+  - FlagYard
 
 nav:
   - name: "Writeups"
