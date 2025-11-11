@@ -1,3 +1,4 @@
+---
 title: "FlagYard mutedShell V1 → V2 — Deep-Dive Writeup (with tiny Python solvers)"
 date: 2025-11-11
 categories:
