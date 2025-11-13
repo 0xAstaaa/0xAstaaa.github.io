@@ -316,4 +316,4 @@ python3 exploit.py http://mhhbc3rh.playat.flagyard.com
 ---
 
 ## Flag
-**Flag:** `FlagY{63f22b9a59[REDACTED]}`
+**Flag:** `FlagY{[REDACTED]}`
