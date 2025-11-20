@@ -1,0 +1,106 @@
+/* Mobile-first responsive CSS for 0xAstaaa.github.io
+   - Keeps typography readable
+   - Responsive container and images
+   - Simple responsive nav
+   - Grid for projects/writeups with breakpoints
+*/
+
+/* Basic reset / box sizing */
+* { box-sizing: border-box; }
+html,body { margin:0; padding:0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial; color:#0b0b0b; background:#fff; }
+
+/* Base page container */
+.container {
+  width: 100%;
+  max-width: 1000px; /* comfortable reading width on desktop */
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Typography */
+h1, h2, h3 { line-height: 1.15; margin: 0 0 0.5em; }
+p { line-height: 1.6; margin: 0 0 1em; font-size: 1rem; }
+
+/* Make tap targets big enough */
+a, button { touch-action: manipulation; -webkit-tap-highlight-color: rgba(0,0,0,0.05); }
+
+/* Images: scale down to container */
+img { max-width: 100%; height: auto; display:block; }
+
+/* Header / nav */
+.header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.brand { font-weight:600; font-size:1.1rem; }
+
+/* Desktop nav (hidden on small screens) */
+.nav {
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+.nav a { text-decoration:none; color:inherit; padding:8px 10px; border-radius:6px; }
+
+/* Mobile hamburger (shown on small screens) */
+.menu-toggle {
+  display:flex;
+  align-items:center;
+  background:transparent;
+  border:0;
+  font-size:1.25rem;
+  padding:8px;
+}
+.mobile-nav {
+  display:none;
+  flex-direction:column;
+  gap:10px;
+  margin-top:12px;
+}
+
+/* Project / writeup grid (mobile single column) */
+.grid {
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+/* Card style */
+.card {
+  padding: 14px;
+  border-radius: 12px;
+  background: #f8f9fb;
+  border: 1px solid rgba(0,0,0,0.04);
+}
+
+/* Footer spacing */
+.site-footer { margin-top: 28px; padding-top: 8px; color:#666; font-size:0.95rem; }
+
+/* Larger screens: adjust layout */
+@media (min-width: 700px) {
+  .nav { display:flex; }
+  .menu-toggle { display:none; }
+  .mobile-nav { display:none !important; }
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  p { font-size:1.05rem; }
+}
+
+/* Desktop wide screens */
+@media (min-width: 1100px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .container { padding: 28px; }
+  h1 { font-size: 2.1rem; }
+}
+
+/* Accessibility / high contrast helper */
+:focus { outline: 3px solid #0b69ff66; outline-offset: 2px; }
+
+/* Utilities */
+.center { text-align:center; }
+.small { font-size:0.9rem; color:#666; }
