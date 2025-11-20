@@ -8,7 +8,6 @@ tags:
   - xor
   - permutation
   - glibc
-  - dogbolt
 ---
 
 # Locker —  writeup
