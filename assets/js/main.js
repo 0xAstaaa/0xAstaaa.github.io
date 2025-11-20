@@ -7,7 +7,6 @@
   const normalize = (s) => (s || "").toString().toLowerCase();
 
   function setupNavActive() {
-    // Liquid adds is-active, but keep for baseurl edge cases
     const path = location.pathname.replace(window.SITE_BASEURL || "", "");
     qsa(".nav__link").forEach((a) => {
       try {
@@ -35,7 +34,6 @@
     let activeTags = new Set();
     let searchIndex = [];
 
-    // Build index from DOM
     searchIndex = cards.map((card) => {
       return {
         el: card,
@@ -47,7 +45,6 @@
       };
     });
 
-    // Build tag cloud with weighted sizes
     const tagCounts = {};
     cards.forEach((c) => {
       (c.dataset.tags || "").split(",").map(t => t.trim()).filter(Boolean).forEach((t) => {
@@ -63,7 +60,7 @@
       btn.className = "tag";
       btn.type = "button";
       btn.setAttribute("data-tag", tag);
-      const weight = 0.9 + (count / max) * 0.5; // font scaling
+      const weight = 0.9 + (count / max) * 0.5;
       btn.style.fontSize = `${weight}rem`;
       btn.textContent = `#${tag}`;
       btn.title = `${count} writeup(s)`;
@@ -75,7 +72,6 @@
       tagCloud.appendChild(btn);
     });
 
-    // Category chips
     if (chipsContainer) {
       qsa(".chip", chipsContainer).forEach((chip) => {
         chip.addEventListener("click", () => {
@@ -92,10 +88,8 @@
       });
     }
 
-    // Search
     const doFilter = debounce(applyFilters, 80);
     if (searchInput) {
-      // Shortcut: "/" to focus search
       window.addEventListener("keydown", (e) => {
         if (e.key === "/" && document.activeElement !== searchInput) {
           e.preventDefault();
@@ -236,9 +230,52 @@
     }
   }
 
+  /* ---------------------------------------------------------
+     RESPONSIVE MODE (auto mobile/desktop) — NO HTML/CSS EDITS
+     --------------------------------------------------------- */
+  function setupResponsive() {
+    function apply() {
+      const w = window.innerWidth;
+
+      // Global font scaling
+      document.body.style.fontSize = (w < 768 ? "15px" : "18px");
+
+      // Make all images responsive
+      qsa("img").forEach(img => {
+        img.style.maxWidth = "100%";
+        img.style.height = "auto";
+      });
+
+      // Adjust layout on mobile
+      qsa("*").forEach(el => {
+        const style = window.getComputedStyle(el);
+        if (w < 768) {
+          if (style.display === "flex") {
+            el.style.flexDirection = "column";
+            el.style.alignItems = "stretch";
+          }
+          el.style.maxWidth = "100%";
+        } else {
+          if (style.display === "flex") el.style.flexDirection = "";
+          el.style.maxWidth = "";
+        }
+      });
+
+      // Buttons and links
+      qsa("button, a").forEach(btn => {
+        btn.style.padding = (w < 768 ? "12px 18px" : "8px 14px");
+        btn.style.fontSize = (w < 768 ? "16px" : "14px");
+      });
+    }
+
+    window.addEventListener("resize", apply);
+    apply(); // initial load
+  }
+
   document.addEventListener("DOMContentLoaded", () => {
     setupNavActive();
     setupWriteups();
     setupProjects();
+    setupResponsive(); // <-- added here
   });
 })();
