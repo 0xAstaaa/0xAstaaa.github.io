@@ -2,7 +2,7 @@
 title: "Brainrot Binary  M*CTF 2025 Quals — Writeup"
 date: 2025-11-16
 categories:
-  - CTF
+  - CtfTime
 tags:
   - reverse-engineering
   - crypto
